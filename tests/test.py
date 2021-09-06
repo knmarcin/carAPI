@@ -97,4 +97,36 @@ class PostRatingTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+class PopularCarsTest(APITestCase):
+    def setUp(self) -> None:
+        Car.objects.create(make="Volkswagen", model="Golf")
+        Car.objects.create(make="Renault", model="Clio")
+        Car.objects.create(make="BMW", model="M3")
 
+        self.client.post(
+            "/rate/",
+            {
+                "car_id": 1,
+                "rating": 5
+            }
+        )
+
+        self.client.post(
+            "/rate/",
+            {
+                "car_id": 2,
+                "rating": 5
+            }
+        )
+
+        self.client.post(
+            "/rate/",
+            {
+                "car_id": 2,
+                "rating": 5
+            }
+        )
+
+    def test_response(self):
+        response = self.client.get('/popular/')
+        self.assertEqual(response.status_code, 200)

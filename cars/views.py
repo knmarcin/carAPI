@@ -2,7 +2,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from cars.models import Car, CarRate
-from cars.serializers import CarSerializer, CarSerializerPost, CarRatingSerializer
+from cars.serializers import CarSerializer, CarSerializerPost, CarRatingSerializer, PopularCarsSerializer
 from utils import connector
 from utils.rating_validator import rating_validator
 
@@ -46,3 +46,10 @@ class CarRatesSet(APIView):
         cars = CarRate.objects.create(car_id=car, rating=rating)
         serializer = CarRatingSerializer(cars, many=False)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PopularCarsSet(APIView):
+    def get(self, *args, **kwargs):
+        cars = Car.objects.all()
+        serializer = PopularCarsSerializer(cars, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
