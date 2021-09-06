@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cars.models import Car
+from cars.models import Car, CarRate
 
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,3 +11,8 @@ class CarSerializerPost(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = ('make', 'model')
+
+class CarRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarRate
+        fields = ('car_id', 'rating')
