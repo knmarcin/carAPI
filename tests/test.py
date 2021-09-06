@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from cars.models import Car
+from cars.models import Car, CarRate
 
 class CarApiResponseTest(APITestCase):
     def test_get_cars_response_if_empty(self):
@@ -106,27 +106,35 @@ class PopularCarsTest(APITestCase):
         self.client.post(
             "/rate/",
             {
+                "car_id": 2,
+                "rating": 5
+            }
+        )
+
+        self.client.post(
+            "/rate/",
+            {
+                "car_id": 2,
+                "rating": 3
+            }
+        )
+
+        self.client.post(
+            "/rate/",
+            {
                 "car_id": 1,
-                "rating": 5
-            }
-        )
-
-        self.client.post(
-            "/rate/",
-            {
-                "car_id": 2,
-                "rating": 5
-            }
-        )
-
-        self.client.post(
-            "/rate/",
-            {
-                "car_id": 2,
-                "rating": 5
+                "rating": 3
             }
         )
 
     def test_response(self):
         response = self.client.get('/popular/')
         self.assertEqual(response.status_code, 200)
+
+    def test_rates_amount(self):
+        response = self.client.get("/cars/")
+        x = response.json()
+        for data in x:
+            if data['id']==2:
+                result = data['avg_rating']
+        self.assertEqual(4, result)
