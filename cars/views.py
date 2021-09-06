@@ -34,5 +34,10 @@ class CarDetailView(generics.RetrieveDestroyAPIView):
     queryset = Car
     serializer_class = CarSerializer
 
+class CarRatesSet(APIView):
+    def post(self, request, *args, **kwargs):
+        rating = request.data.get("rating")
+
+
 
 

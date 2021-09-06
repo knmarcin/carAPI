@@ -7,3 +7,7 @@ class Car(models.Model):
 
     def __str__(self):
         return f"{self.id}"
+
+class CarRate(models.Model):
+    car_id = models.ForeignKey(Car, on_delete=models.CASCADE())
+    rating = models.IntegerField(blank=True, null=True)
