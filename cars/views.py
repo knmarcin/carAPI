@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from cars.models import Car
@@ -29,6 +29,10 @@ class CarsViewSet(APIView):
         else:
             return Response({"Error":"Car not found!"}, status=status.HTTP_204_NO_CONTENT)
 
+
+class CarDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Car
+    serializer_class = CarSerializer
 
 
 
