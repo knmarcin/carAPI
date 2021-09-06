@@ -1,9 +1,10 @@
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from cars.models import Car
-from cars.serializers import CarSerializer, CarSerializerPost
+from cars.models import Car, CarRate
+from cars.serializers import CarSerializer, CarSerializerPost, CarRatingSerializer
 from utils import connector
+from utils.rating_validator import rating_validator
 
 
 class CarsViewSet(APIView):
@@ -36,8 +37,12 @@ class CarDetailView(generics.RetrieveDestroyAPIView):
 
 class CarRatesSet(APIView):
     def post(self, request, *args, **kwargs):
-        rating = request.data.get("rating")
-
-
-
-
+        rating = int(request.data.get("rating"))
+        rating = rating_validator(rating)
+        try:
+            car = Car.objects.get(id=request.data.get("car_id"))
+        except Car.DoesNotExist:
+            return Response({"error": "Object doesn't exist!"}, status=status.HTTP_400_BAD_REQUEST)
+        cars = CarRate.objects.create(car_id=car, rating=rating)
+        serializer = CarRatingSerializer(cars, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
