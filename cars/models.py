@@ -9,5 +9,5 @@ class Car(models.Model):
         return f"{self.id}"
 
 class CarRate(models.Model):
-    car_id = models.ForeignKey(Car, on_delete=models.CASCADE())
+    car_id = models.ForeignKey(Car, on_delete=models.CASCADE)
     rating = models.IntegerField(blank=True, null=True)
