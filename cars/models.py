@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 
 class Car(models.Model):
     make = models.CharField(max_length=128)
@@ -11,3 +12,12 @@ class Car(models.Model):
 class CarRate(models.Model):
     car_id = models.ForeignKey(Car, on_delete=models.CASCADE)
     rating = models.IntegerField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        car = Car.objects.get(id=self.car_id.id)
+        rating = CarRate.objects.filter(car_id=self.car_id.id)
+        car.avg_rating = rating.aggregate(Avg('rating'))['rating__avg']
+        car.save()
+        super(CarRate, self).save(*args, **kwargs)
+
+
