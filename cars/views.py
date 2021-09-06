@@ -2,7 +2,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from cars.models import Car
-from cars.serializers import CarSerializer
+from cars.serializers import CarSerializer, CarSerializerPost
+from utils import connector
 
 
 class CarsViewSet(APIView):
@@ -13,4 +14,21 @@ class CarsViewSet(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request, *args, **kwargs):
+        validate = connector.Connector(
+            car_make=request.data.get('make'),
+            car_model=request.data.get('model')
+        ).get_data()
+
+        if validate:
+            serializer = CarSerializerPost(data=request.data, many=False)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"Error":"Car not found!"}, status=status.HTTP_204_NO_CONTENT)
+
+
+
 
