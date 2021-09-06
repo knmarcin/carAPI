@@ -7,13 +7,7 @@ class CarApiResponseTest(APITestCase):
         self.assertEqual(response.status_code, 204)
 
     def test_get_cars_response_not_empty(self):
-        response = self.client.post(
-            "/cars/",
-            {
-                "make": "Volkswagen",
-                "model": "Golf"
-            }
-        )
+        Car.objects.create(make="Volkswagen", model="Golf")
         response = self.client.get('/cars/')
         self.assertEqual(response.status_code, 200)
 
@@ -41,27 +35,9 @@ class CarApiResponseTest(APITestCase):
 
 class CarAPIDeleteTests(APITestCase):
     def setUp(self) -> None:
-        self.client.post(
-            "/cars/",
-            {
-                "make": "Honda",
-                "model": "Accord"
-            }
-        )
-        self.client.post(
-            "/cars/",
-            {
-                "make": "Volkswagen",
-                "model": "Golf"
-            }
-        )
-        self.client.post(
-            "/cars/",
-            {
-                "make": "Renault",
-                "model": "Clio"
-            }
-        )
+        Car.objects.create(make="Volkswagen", model="Golf")
+        Car.objects.create(make="Renault", model="Clio")
+        Car.objects.create(make="BMW", model="M3")
 
     def test_delete_object(self):
         response = self.client.delete(
