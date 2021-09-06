@@ -14,10 +14,12 @@ class CarRate(models.Model):
     rating = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        super(CarRate, self).save(*args, **kwargs)
         car = Car.objects.get(id=self.car_id.id)
         rating = CarRate.objects.filter(car_id=self.car_id.id)
         car.avg_rating = rating.aggregate(Avg('rating'))['rating__avg']
         car.save()
-        super(CarRate, self).save(*args, **kwargs)
+
+
 
 
