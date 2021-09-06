@@ -14,20 +14,20 @@ class CarApiResponseTest(APITestCase):
 
     def test_post_cars_response(self):
         response = self.client.post(
-            "/cars/",
+            '/cars/',
             {
-                "make": "Volkswagen",
-                "model": "Golf"
+                'make': 'Volkswagen',
+                'model': 'Golf'
             }
         )
         self.assertEqual(response.status_code, 201)
 
     def test_post_car_if_not_found_in_external_api(self):
         response = self.client.post(
-            "/cars/",
+            '/cars/',
             {
-                "make": "volkswagen",
-                "model": "golf"
+                'make': 'volkswagen',
+                'model': 'golf'
             }
         )
         self.assertEqual(response.status_code, 204)
@@ -56,5 +56,45 @@ class CarAPIDeleteTests(APITestCase):
         response = self.client.get('/cars/2')
         self.assertEqual(response.status_code, 404)
 
+class PostRatingTest(APITestCase):
+    def setUp(self) -> None:
+        self.client.post(
+            "/cars/",
+            {
+                "make": "Volkswagen",
+                "model": "Golf"
+            }
+        )
+
+    def test_good_request_rating_post(self):
+        response = self.client.post(
+            "/rate/",
+            {
+                "car_id": 1,
+                "rating": 3
+            }
+        )
+        self.assertEqual(response.status_code, 201)
+
+    def test_bad_request_rating_post(self):
+        response = self.client.post(
+            "/rate/",
+            {
+                "car_id": 10,
+                "rating": 5
+            }
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_bad_rating_post(self):
+        response = self.client.post(
+            "/rate/",
+            {
+                "car_id": 10,
+                "rating": 8
+            }
+        )
+        self.assertEqual(response.status_code, 400)
 
 
