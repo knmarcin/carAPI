@@ -18,7 +18,6 @@ from django.urls import path
 from cars.views import CarsViewSet, CarDetailView, CarRatesSet, PopularCarsSet
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('cars/', CarsViewSet.as_view()),
     path('cars/<int:pk>', CarDetailView.as_view()),
     path('rate/', CarRatesSet.as_view()),
