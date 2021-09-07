@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase
 from utils.rating_validator import rating_validator
 from rest_framework.exceptions import ValidationError
 
+
 class ValidationTest(APITestCase):
 
     def test_validation_if_string(self):
@@ -25,6 +26,3 @@ class ValidationTest(APITestCase):
     def test_validation_float(self):
         with self.assertRaises(ValidationError):
             self.assertEqual(rating_validator(1.2), 1)
-
-
-

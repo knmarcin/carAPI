@@ -1,4 +1,4 @@
-from rest_framework import status, generics, serializers
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from cars.models import Car, CarRate
@@ -28,12 +28,13 @@ class CarsViewSet(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({"Error":"Car not found!"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"Error": "Car not found!"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CarDetailView(generics.RetrieveDestroyAPIView):
     queryset = Car
     serializer_class = CarSerializer
+
 
 class CarRatesSet(APIView):
     def post(self, request, *args, **kwargs):
@@ -45,7 +46,7 @@ class CarRatesSet(APIView):
         except Car.DoesNotExist:
             return Response({"error": "Object doesn't exist!"}, status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
-            return Response({"rating":"This field should be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"rating": "This field should be an integer"}, status=status.HTTP_400_BAD_REQUEST)
         cars = CarRate.objects.create(car_id=car, rating=rating)
         serializer = CarRatingSerializer(cars, many=False)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

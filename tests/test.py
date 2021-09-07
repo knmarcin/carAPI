@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
-from cars.models import Car, CarRate
+from cars.models import Car
+
 
 class CarApiResponseTest(APITestCase):
     def test_get_cars_response_if_empty(self):
@@ -10,7 +11,6 @@ class CarApiResponseTest(APITestCase):
         Car.objects.create(make="Volkswagen", model="Golf")
         response = self.client.get('/cars/')
         self.assertEqual(response.status_code, 200)
-
 
     def test_post_cars_response(self):
         response = self.client.post(
@@ -74,6 +74,7 @@ class CarAPIDeleteTests(APITestCase):
         response = self.client.get('/cars/2')
         self.assertEqual(response.status_code, 404)
 
+
 class PostRatingTest(APITestCase):
     def setUp(self) -> None:
         self.client.post(
@@ -125,6 +126,7 @@ class PostRatingTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+
 class PopularCarsTest(APITestCase):
     def setUp(self) -> None:
         Car.objects.create(make="Volkswagen", model="Golf")
@@ -155,10 +157,6 @@ class PopularCarsTest(APITestCase):
             }
         )
 
-
-
-
-
     def test_response(self):
         response = self.client.get('/popular/')
         self.assertEqual(response.status_code, 200)
@@ -166,8 +164,9 @@ class PopularCarsTest(APITestCase):
     def test_rates_amount(self):
         response = self.client.get("/cars/")
         x = response.json()
+        result = ''
         for data in x:
-            if data['id']==2:
+            if data['id'] == 2:
                 result = data['avg_rating']
         self.assertEqual(4, result)
 
@@ -181,7 +180,8 @@ class PopularCarsTest(APITestCase):
         )
         response = self.client.get("/cars/")
         x = response.json()
+        result = ''
         for data in x:
-            if data['id']==2:
+            if data['id'] == 2:
                 result = data['avg_rating']
         self.assertAlmostEqual(4.3333333, result)
