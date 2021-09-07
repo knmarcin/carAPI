@@ -22,6 +22,24 @@ class CarApiResponseTest(APITestCase):
         )
         self.assertEqual(response.status_code, 201)
 
+    def test_post_request_body_should_contain_make_and_model(self):
+        response = self.client.post(
+            '/cars/',
+            {
+                'make': 'Volkswagen'
+            }
+        )
+        self.assertEqual(response.status_code, 204)
+
+        response = self.client.post(
+            '/cars/',
+            {
+                'model': 'Golf'
+            }
+        )
+        self.assertEqual(response.status_code, 204)
+
+
     def test_post_car_if_not_found_in_external_api(self):
         response = self.client.post(
             '/cars/',
@@ -97,6 +115,16 @@ class PostRatingTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+    def test_float_rating_post(self):
+        response = self.client.post(
+            "/rate/",
+            {
+                "car_id": 10,
+                "rating": 3.3
+            }
+        )
+        self.assertEqual(response.status_code, 400)
+
 class PopularCarsTest(APITestCase):
     def setUp(self) -> None:
         Car.objects.create(make="Volkswagen", model="Golf")
@@ -127,6 +155,10 @@ class PopularCarsTest(APITestCase):
             }
         )
 
+
+
+
+
     def test_response(self):
         response = self.client.get('/popular/')
         self.assertEqual(response.status_code, 200)
@@ -138,3 +170,18 @@ class PopularCarsTest(APITestCase):
             if data['id']==2:
                 result = data['avg_rating']
         self.assertEqual(4, result)
+
+    def test_int(self):
+        self.client.post(
+            "/rate/",
+            {
+                "car_id": 2,
+                "rating": 5
+            }
+        )
+        response = self.client.get("/cars/")
+        x = response.json()
+        for data in x:
+            if data['id']==2:
+                result = data['avg_rating']
+        self.assertAlmostEqual(4.3333333, result)
